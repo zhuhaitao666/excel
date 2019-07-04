@@ -1,0 +1,49 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Good Thymes Virtual Grocery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:href="@{/bootstrap.css}" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1 style="text-align: center">从Excel导入的数据</h1>
+    <table class="table table-hover">
+        <caption>成绩表</caption>
+        <thead>
+                <th>序号</th>
+                <th>姓名</th>
+                <th>学科</th>
+                <th>成绩</th>
+        </thead>
+        <tbody>
+        <tr th:each="stu:${list}" class="success">
+            <td th:text="${stu.getId()}" ></td>
+            <td th:text="${stu.getName()}" ></td>
+            <td th:text="${stu.getCourse()}"></td>
+            <td th:text="${stu.getScore()}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <h3 style="text-align: center">从数据库中导入数据,点击保存生成Excel表</h3>
+    <table class="table table-hover">
+        <caption>成绩表</caption>
+        <thead>
+        <th>序号</th>
+        <th>姓名</th>
+        <th>学科</th>
+        <th>成绩</th>
+        </thead>
+        <tbody>
+        <tr th:each="stu:${list1}" class="warning">
+            <td th:text="${stu.getId()}" ></td>
+            <td th:text="${stu.getName()}" ></td>
+            <td th:text="${stu.getCourse()}"></td>
+            <td th:text="${stu.getScore()}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-danger"><a th:href="@{/export}">保存到Excel</a></button>
+</div>
+</body>
+</html> 
