@@ -3,10 +3,11 @@ package com.example.excel.controller;
 import com.example.excel.domain.S;
 import com.example.excel.service.SService;
 import org.apache.commons.io.FileUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -125,5 +126,71 @@ public class SController {
         workbook.write(outputStream);
         outputStream.close();
         return "success";//实战中应该通过异步处理
+    }
+    @RequestMapping("/export1")
+    @ResponseBody
+    public String createCellStyleExcel(HttpServletResponse response){
+        //1.创建工作薄
+        HSSFWorkbook workbook=new HSSFWorkbook();
+        //2.创建工作表
+        HSSFSheet sheet=workbook.createSheet("cellStyle");
+        //设置第几列的单元格宽度sheet.setColumnWidth(0, 256*width+184);
+        sheet.setColumnWidth(3,256*20+184);
+        //3.创建行
+        HSSFRow row=sheet.createRow(1);
+        //设置行高
+        row.setHeight((short) 800);
+        HSSFCell cell=row.createCell(1);
+        cell.setCellValue("test of merging");
+        //合并单元格，功能浅显易懂
+        sheet.addMergedRegion(new CellRangeAddress(
+                1, //first row (0-based)
+                1, //last row (0-based)
+                1, //first column (0-based)
+                4 //last column (0-based)
+        ));
+        //设置背景色
+        row=sheet.createRow(2);
+        cell=row.createCell(2);
+        HSSFCellStyle cellStyle=workbook.createCellStyle();//创建样式
+        cellStyle.setFillBackgroundColor((short) 13);//背景颜色
+        //设置单元格无边框
+//        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        //设置文字居中
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("麻了");
+        //---------------------------
+        //创建下一个单元格
+        cell=row.createCell(3);
+        cell.setCellValue("改变字体改变隔膜改变小气我可以改变自己");
+        HSSFCellStyle cellStyle1=workbook.createCellStyle();//创建样式
+        HSSFFont font = workbook.createFont();
+        font.setFontName("黑体");
+        font.setFontHeightInPoints((short) 16);//设置字体大小
+
+        HSSFFont font2 = workbook.createFont();
+        font2.setFontName("仿宋_GB2312");
+        font2.setBold(true);//粗体
+        font2.setFontHeightInPoints((short) 12);//设置字体大小
+
+        cellStyle1.setFont(font);//选择需要用到的字体格式
+        //设置自动换行
+//        cellStyle1.setWrapText(true);
+        cell.setCellStyle(cellStyle1);
+        //--------------------------------------------
+
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(
+                    new File("cellstyle.xlsx"));
+            workbook.write(out);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "cellstyle.xlsx written successfully";
     }
 }
