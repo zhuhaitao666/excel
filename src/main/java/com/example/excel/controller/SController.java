@@ -89,11 +89,11 @@ public class SController {
         for (int i=0;i<title.length;i++){
             cell=row.createCell(i);
             cell.setCellValue(title[i]);
+//            sheet.autoSizeColumn(i);//单元格宽度自适应
         }
-
+        int i;
         //5.插入其他数据
-        for (int i=1;i<=sList.size();i++){
-            sheet.autoSizeColumn(i);//单元格宽度自适应
+        for (i=1;i<=sList.size();i++){
             row=sheet.createRow(i);//创建行
             S s=sList.get(i-1);
             for(int j=0;j<title.length;j++){
@@ -111,6 +111,21 @@ public class SController {
                 }
             }
         }
+        //最后一行做函数运算
+        row=sheet.createRow(i);//创建行
+        cell=row.createCell(0);
+        cell.setCellValue("总人数:");
+        cell=row.createCell(1);
+//        cell.setCellFormula("COUNT(C1,C"+i+")");
+        cell.setCellValue(i-1);
+        cell=row.createCell(2);
+        cell.setCellValue("最大成绩:");
+        cell=row.createCell(3);
+        cell.setCellFormula("MAX(D2:D"+i+")");
+        cell=row.createCell(4);
+        cell.setCellValue("成绩总和");
+        cell=row.createCell(5);
+        cell.setCellFormula("SUM(D2:D"+i+")");
         //保存到固定的位置
 //        File file=new File("D://生成的Excel表.xls");
 //        file.createNewFile();
